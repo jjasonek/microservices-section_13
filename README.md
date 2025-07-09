@@ -71,6 +71,28 @@ POST http://localhost:8080/sms
 2025-07-09T23:13:31.062+02:00  INFO 19024 --- [message] [nio-8080-exec-4] c.e.message.functions.MessageFunctions   : Sending sms with the details: AccountsMsgDto[accountNumber=1234545454, name=Madan Reddy, email=tutor@eazybytes, mobileNumber=4354437687]
 
 
+## Test composed functions
+
+POST http://localhost:9010/email
+...
+2025-07-09T23:24:01.210+02:00  WARN 2280 --- [message] [nio-9010-exec-2] c.f.c.c.BeanFactoryAwareFunctionRegistry : Failed to locate function 'email' for function definition 'email'. Returning null.
+2025-07-09T23:24:01.319+02:00  INFO 2280 --- [message] [nio-9010-exec-2] c.e.message.functions.MessageFunctions   : Sending email with the details: AccountsMsgDto[accountNumber=1234545454, name=Madan Reddy, email=tutor@eazybytes, mobileNumber=4354437687]
+
+POST http://localhost:9010/sms
+...
+2025-07-09T23:24:06.695+02:00  WARN 2280 --- [message] [nio-9010-exec-3] c.f.c.c.BeanFactoryAwareFunctionRegistry : Failed to locate function 'sms' for function definition 'sms'. Returning null.
+2025-07-09T23:24:06.697+02:00  INFO 2280 --- [message] [nio-9010-exec-3] c.e.message.functions.MessageFunctions   : Sending sms with the details: AccountsMsgDto[accountNumber=1234545454, name=Madan Reddy, email=tutor@eazybytes, mobileNumber=4354437687]
+
+POST http://localhost:9010/emailsms
+...
+2025-07-09T23:29:40.778+02:00  WARN 2280 --- [message] [nio-9010-exec-6] c.f.c.c.BeanFactoryAwareFunctionRegistry : Failed to locate function 'emailsms' for function definition 'emailsms'. Returning null.
+2025-07-09T23:29:40.783+02:00  WARN 2280 --- [message] [nio-9010-exec-6] c.f.c.c.BeanFactoryAwareFunctionRegistry : Failed to locate function 'emailsms' for function definition 'emailsms'. Returning null.
+2025-07-09T23:29:40.786+02:00  INFO 2280 --- [message] [nio-9010-exec-6] c.e.message.functions.MessageFunctions   : Sending email with the details: AccountsMsgDto[accountNumber=1234545454, name=Madan Reddy, email=tutor@eazybytes, mobileNumber=4354437687]
+2025-07-09T23:29:40.786+02:00  INFO 2280 --- [message] [nio-9010-exec-6] c.e.message.functions.MessageFunctions   : Sending sms with the details: AccountsMsgDto[accountNumber=1234545454, name=Madan Reddy, email=tutor@eazybytes, mobileNumber=4354437687]
+2025-07-09T23:29:40.787+02:00  WARN 2280 --- [message] [nio-9010-exec-6] c.f.c.c.BeanFactoryAwareFunctionRegistry : Failed to locate function 'emailsms' for function definition 'emailsms'. Returning null.
+2025-07-09T23:29:40.789+02:00  WARN 2280 --- [message] [nio-9010-exec-6] c.f.c.c.BeanFactoryAwareFunctionRegistry : Failed to locate function 'emailsms' for function definition 'emailsms'. Returning null.
+
+
 
 ## Docker compose
 
