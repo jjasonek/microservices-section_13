@@ -44,6 +44,31 @@ http://localhost:8090/actuator
 http://localhost:9000/actuator
 
 
+## Add MessageFunctions
+
+2025-07-09T22:59:30.288+02:00  INFO 19024 --- [message] [           main] c.eazybytes.message.MessageApplication   : Starting MessageApplication using Java 22.0.1 with PID 19024 (C:\Training\Microservices\section_13\message\target\classes started by jijas in C:\Training\Microservices\section_13)
+2025-07-09T22:59:30.295+02:00  INFO 19024 --- [message] [           main] c.eazybytes.message.MessageApplication   : No active profile set, falling back to 1 default profile: "default"
+2025-07-09T22:59:31.100+02:00  INFO 19024 --- [message] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2025-07-09T22:59:31.116+02:00  INFO 19024 --- [message] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-07-09T22:59:31.116+02:00  INFO 19024 --- [message] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.42]
+2025-07-09T22:59:31.155+02:00  INFO 19024 --- [message] [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2025-07-09T22:59:31.157+02:00  INFO 19024 --- [message] [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 812 ms
+2025-07-09T22:59:31.592+02:00  INFO 19024 --- [message] [           main] o.s.c.f.web.mvc.FunctionHandlerMapping   : FunctionCatalog: org.springframework.cloud.function.context.catalog.BeanFactoryAwareFunctionRegistry@5df6163a
+2025-07-09T22:59:31.628+02:00  INFO 19024 --- [message] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2025-07-09T22:59:31.635+02:00  INFO 19024 --- [message] [           main] c.eazybytes.message.MessageApplication   : Started MessageApplication in 1.835 seconds (process running for 3.32)
+
+
+### Application starts by default on port 8080 and name of the function is the API path. 
+
+POST http://localhost:8080/email
+...
+2025-07-09T23:05:38.455+02:00  WARN 19024 --- [message] [nio-8080-exec-1] c.f.c.c.BeanFactoryAwareFunctionRegistry : Failed to locate function 'email' for function definition 'email'. Returning null.
+2025-07-09T23:05:38.583+02:00  INFO 19024 --- [message] [nio-8080-exec-1] c.e.message.functions.MessageFunctions   : Sending email with the details: AccountsMsgDto[accountNumber=1234545454, name=Madan Reddy, email=tutor@eazybytes, mobileNumber=4354437687]
+
+POST http://localhost:8080/sms
+...
+2025-07-09T23:13:31.060+02:00  WARN 19024 --- [message] [nio-8080-exec-4] c.f.c.c.BeanFactoryAwareFunctionRegistry : Failed to locate function 'sms' for function definition 'sms'. Returning null.
+2025-07-09T23:13:31.062+02:00  INFO 19024 --- [message] [nio-8080-exec-4] c.e.message.functions.MessageFunctions   : Sending sms with the details: AccountsMsgDto[accountNumber=1234545454, name=Madan Reddy, email=tutor@eazybytes, mobileNumber=4354437687]
 
 
 
