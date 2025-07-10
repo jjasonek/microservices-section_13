@@ -156,6 +156,7 @@ docker images | grep s13
 docker image push docker.io/jjasonek/accounts:s13
 docker image push docker.io/jjasonek/loans:s13
 docker image push docker.io/jjasonek/cards:s13
+docker image push docker.io/jjasonek/message:s13
 docker image push docker.io/jjasonek/configserver:s13
 docker image push docker.io/jjasonek/eurekaserver:s13
 docker image push docker.io/jjasonek/gatewayserver:s13

@@ -1,5 +1,21 @@
 services:
 
+  rabbit:
+    image: rabbitmq:4.0-management
+    hostname: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    healthcheck:
+      test: rabbitmq-diagnostics check_port_connectivity
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 5s
+    extends:
+      file: common-config.yml
+      service: network-deploy-service
+
   keycloak:
     image: quay.io/keycloak/keycloak:26.3.0
     container_name: keycloak
@@ -282,12 +298,16 @@ services:
     environment:
       SPRING_APPLICATION_NAME: "accounts"   # This is here because of bug in Spring Cloud Config Server version.
       OTEL_SERVICE_NAME: "accounts"
+      SPRING_RABBITMQ_HOST: "rabbit"
     healthcheck:
       test: "curl --fail --silent localhost:8080/actuator/health/readiness | grep UP || exit 1"
       interval: 10s
       timeout: 5s
       retries: 10
       start_period: 10s  # Wait for 10 seconds before checking the health of the container
+    depends_on:
+      rabbit:
+        condition: service_healthy
     extends:
       file: common-config.yml
       service: microservice-eureka-config
@@ -323,6 +343,18 @@ services:
     extends:
       file: common-config.yml
       service: microservice-eureka-config
+
+  message:
+    image: "eazybytes/message:s13"
+    container_name: message-ms
+    depends_on:
+      rabbit:
+        condition: service_healthy
+    environment:
+      SPRING_RABBITMQ_HOST: "rabbit"
+    extends:
+      file: common-config.yml
+      service: network-deploy-service
 
   gatewayserver:
     image: "jjasonek/gatewayserver:s13"
