@@ -24,8 +24,13 @@ spring:
     openfeign:
       circuitbreaker:
         enabled: true
+    function:
+      definition: updateCommunication   # it is possible define mor functions separated by ';'
     stream:
       bindings:
+        updateCommunication-in-0:
+          destination: communication-sent   # Queue name
+          group: ${spring.application.name}
         sendCommunication-out-0:  # Binding name following our convention: out as output, 0 as starting index.
           destination: send-communication   # Exchange name
   rabbitmq:

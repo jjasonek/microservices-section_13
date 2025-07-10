@@ -12,6 +12,8 @@ spring:
         email|sms-in-0:   # Binding name following our convention: in as input, 0 as starting index.
           destination: send-communication   # Queue name
           group: ${spring.application.name}   # we don't wont RabbitMQ to append some random values to our channel, destination and queue name.
+        email|sms-out-0:  # Binding name following our convention: out as output, 0 as starting index.
+          destination: communication-sent   # Exchange name
   rabbitmq:
     host: localhost
     port: 5672

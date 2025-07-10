@@ -125,6 +125,23 @@ POST http://localhost:8072/eazybank/accounts/api/create
 2025-07-10T20:35:14.076+02:00  INFO 33308 --- [message] [ation.message-1] c.e.message.functions.MessageFunctions   : Sending email with the details: AccountsMsgDto[accountNumber=1446456721, name=Madan Reddy, email=tutor@eazybytes, mobileNumber=4354437689]
 2025-07-10T20:35:14.081+02:00  INFO 33308 --- [message] [ation.message-1] c.e.message.functions.MessageFunctions   : Sending sms with the details: AccountsMsgDto[accountNumber=1446456721, name=Madan Reddy, email=tutor@eazybytes, mobileNumber=4354437689]
 
+
+## Test non blocking notification about created account and notification about sent communication
+
+### accounts log (I postponed sending communication by a breakpoint inside the email function)
+Hibernate: insert into accounts (account_type,branch_address,communication_sw,created_at,created_by,customer_id,account_number) values (?,?,?,?,?,?,?)
+2025-07-10T22:58:47.594+02:00  INFO [accounts,,] 37516 --- [accounts] [nio-8080-exec-8] c.e.a.service.impl.AccountServiceImpl    : Sending communication for the details: AccountsMsgDto[accountNumber=1124062841, name=Madan Reddy, email=tutor@eazybytes, mobileNumber=4354437688]
+2025-07-10T22:58:47.597+02:00  INFO [accounts,,] 37516 --- [accounts] [nio-8080-exec-8] c.e.a.service.impl.AccountServiceImpl    : Is the communication request successfully triggered? : true
+2025-07-10T23:01:16.827+02:00  INFO [accounts,,] 37516 --- [accounts] [sent.accounts-1] c.e.accounts.functions.AccountFunctions  : Updating communication status for the account number: 1124062841
+Hibernate: select a1_0.account_number,a1_0.account_type,a1_0.branch_address,a1_0.communication_sw,a1_0.created_at,a1_0.created_by,a1_0.customer_id,a1_0.updated_at,a1_0.updated_by from accounts a1_0 where a1_0.account_number=?
+Hibernate: select a1_0.account_number,a1_0.account_type,a1_0.branch_address,a1_0.communication_sw,a1_0.created_at,a1_0.created_by,a1_0.customer_id,a1_0.updated_at,a1_0.updated_by from accounts a1_0 where a1_0.account_number=?
+Hibernate: update accounts set account_type=?,branch_address=?,communication_sw=?,customer_id=?,updated_at=?,updated_by=? where account_number=?
+
+### message log
+2025-07-10T23:01:16.786+02:00  INFO 40096 --- [message] [ation.message-1] c.e.message.functions.MessageFunctions   : Sending email with the details: AccountsMsgDto[accountNumber=1124062841, name=Madan Reddy, email=tutor@eazybytes, mobileNumber=4354437688]
+2025-07-10T23:01:16.791+02:00  INFO 40096 --- [message] [ation.message-1] c.e.message.functions.MessageFunctions   : Sending sms with the details: AccountsMsgDto[accountNumber=1124062841, name=Madan Reddy, email=tutor@eazybytes, mobileNumber=4354437688]
+
+
 ## Docker compose
 
 ### for all microservices we call following to generate docker images s11:
