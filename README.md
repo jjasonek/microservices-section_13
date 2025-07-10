@@ -93,6 +93,37 @@ POST http://localhost:9010/emailsms
 2025-07-09T23:29:40.789+02:00  WARN 2280 --- [message] [nio-9010-exec-6] c.f.c.c.BeanFactoryAwareFunctionRegistry : Failed to locate function 'emailsms' for function definition 'emailsms'. Returning null.
 
 
+## Test non blocking notification about created account
+
+### run Redis server
+docker run -p 6379:6379 --name eazyredis -d redis
+### Start RabbitMQ
+docker run -it --rm --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:4-management
+### start KeyCloak Docker container
+docker run -d -p 127.0.0.1:7080:8080 -e KC_BOOTSTRAP_ADMIN_USERNAME=admin -e KC_BOOTSTRAP_ADMIN_PASSWORD=admin quay.io/keycloak/keycloak:26.3.0 start-dev
+### login to RabbitMQ
+http://localhost:15672/
+guest/guest
+
+### Invoke the API
+POST http://localhost:8072/eazybank/accounts/api/create
+
+### accounts log
+2025-07-10T20:35:13.321+02:00  INFO [accounts,,] 40456 --- [accounts] [nio-8080-exec-1] c.e.a.service.impl.AccountServiceImpl    : Sending communication for the details: AccountsMsgDto[accountNumber=1446456721, name=Madan Reddy, email=tutor@eazybytes, mobileNumber=4354437689]
+2025-07-10T20:35:13.331+02:00  INFO [accounts,,] 40456 --- [accounts] [nio-8080-exec-1] o.s.c.s.binder.DefaultBinderFactory      : Creating binder: rabbit
+2025-07-10T20:35:13.331+02:00  INFO [accounts,,] 40456 --- [accounts] [nio-8080-exec-1] o.s.c.s.binder.DefaultBinderFactory      : Constructing binder child context for rabbit
+2025-07-10T20:35:13.554+02:00  INFO [accounts,,] 40456 --- [accounts] [nio-8080-exec-1] o.s.c.s.binder.DefaultBinderFactory      : Caching the binder: rabbit
+2025-07-10T20:35:13.619+02:00  INFO [accounts,,] 40456 --- [accounts] [nio-8080-exec-1] o.s.a.r.c.CachingConnectionFactory       : Attempting to connect to: [localhost:5672]
+2025-07-10T20:35:13.707+02:00  INFO [accounts,,] 40456 --- [accounts] [nio-8080-exec-1] o.s.a.r.c.CachingConnectionFactory       : Created new connection: rabbitConnectionFactory#400aa720:0/SimpleConnection@4437350c [delegate=amqp://guest@127.0.0.1:5672/, localPort=65323]
+2025-07-10T20:35:13.751+02:00  INFO [accounts,,] 40456 --- [accounts] [nio-8080-exec-1] o.s.c.s.m.DirectWithAttributesChannel    : Channel 'accounts.sendCommunication-out-0' has 1 subscriber(s).
+2025-07-10T20:35:13.788+02:00  INFO [accounts,,] 40456 --- [accounts] [nio-8080-exec-1] o.s.a.r.c.CachingConnectionFactory       : Attempting to connect to: [localhost:5672]
+2025-07-10T20:35:13.794+02:00  INFO [accounts,,] 40456 --- [accounts] [nio-8080-exec-1] o.s.a.r.c.CachingConnectionFactory       : Created new connection: rabbitConnectionFactory.publisher#1f2e3612:0/SimpleConnection@7b17aae2 [delegate=amqp://guest@127.0.0.1:5672/, localPort=65324]
+2025-07-10T20:35:13.808+02:00  INFO [accounts,,] 40456 --- [accounts] [nio-8080-exec-1] c.e.a.service.impl.AccountServiceImpl    : Is the communication request successfully triggered? : true
+2025-07-10T20:35:36.617+02:00  INFO [accounts,,] 40456 --- [accounts] [rap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+
+### message log
+2025-07-10T20:35:14.076+02:00  INFO 33308 --- [message] [ation.message-1] c.e.message.functions.MessageFunctions   : Sending email with the details: AccountsMsgDto[accountNumber=1446456721, name=Madan Reddy, email=tutor@eazybytes, mobileNumber=4354437689]
+2025-07-10T20:35:14.081+02:00  INFO 33308 --- [message] [ation.message-1] c.e.message.functions.MessageFunctions   : Sending sms with the details: AccountsMsgDto[accountNumber=1446456721, name=Madan Reddy, email=tutor@eazybytes, mobileNumber=4354437689]
 
 ## Docker compose
 
